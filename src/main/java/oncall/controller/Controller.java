@@ -42,44 +42,43 @@ public class Controller {
 
     private MonthlyOnCalls makeMonthlyOnCalls(MonthlyDate monthlyDate, WeekdayCrewsAndWeekendPlusHolidayCrews weekdayCrewsAndWeekendPlusHolidayCrews) {
         MonthlyOnCalls monthlyOnCalls = new MonthlyOnCalls();
-        Crews weekdayCrews = weekdayCrewsAndWeekendPlusHolidayCrews.getWeekdayCrews();
-        Crews weekendPlusHolidayCrews = weekdayCrewsAndWeekendPlusHolidayCrews.getWeekendPlusHolidayCrews();
         Crew priorCrew = null;
         for (int day = monthlyDate.getStartDayOfMonth(); day <= monthlyDate.getLastDayOfMonth(); day++) {
+            int month = monthlyDate.getMonth();
             int dayOfWeekNumber = DayOfWeekDecider.decideFromDayOfWeek(monthlyDate.getStartDayOfWeek());
             int todayDayOfWeekNumber = (day - 1 + dayOfWeekNumber) % 7;
-            boolean isWeekend = DayOfWeekDecider.isWeekend(todayDayOfWeekNumber);
-            boolean isHoliday = Holiday.isHoliday(monthlyDate.getMonth(), day);
-            if (isWeekend || isHoliday) {
-                Crew peekedCrew = weekendPlusHolidayCrews.peek();
-                Crew crew = null;
-                if (peekedCrew.isMe(priorCrew)) {
-                    Crew temp = weekendPlusHolidayCrews.remove();
-                    crew = weekendPlusHolidayCrews.pop();
-                    weekendPlusHolidayCrews.addFirst(temp);
-                } else {
-                    crew = weekendPlusHolidayCrews.pop();
-                }
-                if (!isWeekend) {
-                    monthlyOnCalls.addMonthlyOnCall(new MonthlyOnCall(monthlyDate.getMonth(), day, DayOfWeekDecider.decideFromNumber(todayDayOfWeekNumber), "공휴일", crew.getName()));
-                } else {
-                    monthlyOnCalls.addMonthlyOnCall(new MonthlyOnCall(monthlyDate.getMonth(), day, DayOfWeekDecider.decideFromNumber(todayDayOfWeekNumber), null, crew.getName()));
-                }
-                priorCrew = crew;
-            } else {
-                Crew peekedCrew = weekdayCrews.peek();
-                Crew crew = null;
-                if (peekedCrew.isMe(priorCrew)) {
-                    Crew temp = weekdayCrews.remove();
-                    crew = weekdayCrews.pop();
-                    weekdayCrews.addFirst(temp);
-                } else {
-                    crew = weekdayCrews.pop();
-                }
-                monthlyOnCalls.addMonthlyOnCall(new MonthlyOnCall(monthlyDate.getMonth(), day, DayOfWeekDecider.decideFromNumber(todayDayOfWeekNumber), null, crew.getName()));
-                priorCrew = crew;
-            }
+            Crews crews = selectCrews(month, day, todayDayOfWeekNumber, weekdayCrewsAndWeekendPlusHolidayCrews);
+            priorCrew = addMonthlyOnCallAndReturnCrew(month, crews, priorCrew, monthlyOnCalls, day, todayDayOfWeekNumber);
         }
         return monthlyOnCalls;
+    }
+
+    private Crew addMonthlyOnCallAndReturnCrew(int month, Crews crews, Crew priorCrew, MonthlyOnCalls monthlyOnCalls, int day, int todayDayOfWeekNumber) {
+        Crew crew = crews.match(priorCrew);
+        if (!isWeekend(todayDayOfWeekNumber) && isHoliday(month, day)) {
+            addMonthlyOnCall(month, monthlyOnCalls, day, todayDayOfWeekNumber, "공휴일", crew);
+        } else {
+            addMonthlyOnCall(month, monthlyOnCalls, day, todayDayOfWeekNumber, null, crew);
+        }
+        return crew;
+    }
+
+    private boolean isHoliday(int month, int day) {
+        return Holiday.isHoliday(month, day);
+    }
+
+    private boolean isWeekend(int todayDayOfWeekNumber) {
+        return DayOfWeekDecider.isWeekend(todayDayOfWeekNumber);
+    }
+
+    private Crews selectCrews(int month, int day, int todayDayOfWeekNumber, WeekdayCrewsAndWeekendPlusHolidayCrews weekdayCrewsAndWeekendPlusHolidayCrews) {
+        if (isWeekend(todayDayOfWeekNumber) || isHoliday(month, day)) {
+            return weekdayCrewsAndWeekendPlusHolidayCrews.getWeekendPlusHolidayCrews();
+        }
+        return weekdayCrewsAndWeekendPlusHolidayCrews.getWeekdayCrews();
+    }
+
+    private void addMonthlyOnCall(int month, MonthlyOnCalls monthlyOnCalls, int day, int todayDayOfWeekNumber, String status, Crew crew) {
+        monthlyOnCalls.addMonthlyOnCall(new MonthlyOnCall(month, day, DayOfWeekDecider.decideFromNumber(todayDayOfWeekNumber), status, crew.getName()));
     }
 }

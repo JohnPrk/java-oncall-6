@@ -19,6 +19,18 @@ public class Crews {
         validNotUpperThirtyFive();
     }
 
+    public Crew match(Crew priorCrew) {
+        Crew crew = null;
+        if (peek().equals(priorCrew)) {
+            Crew temp = remove();
+            crew = pop();
+            crewList.addFirst(temp);
+        } else {
+            crew = pop();
+        }
+        return crew;
+    }
+
     public Crew peek() {
         return crewList.peek();
     }
