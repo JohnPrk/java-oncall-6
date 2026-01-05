@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Crew {
 
     private static final String WITHIN_FIVE_CHARACTER = "[ERROR] 이름은 5자 이내여야합니다.";
+
     private final String name;
 
     public Crew(String name) {
@@ -12,6 +13,14 @@ public class Crew {
             throw new IllegalArgumentException(WITHIN_FIVE_CHARACTER);
         }
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isMe(Crew priorCrew) {
+        return equals(priorCrew);
     }
 
     @Override

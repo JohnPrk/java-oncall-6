@@ -21,6 +21,18 @@ public class MonthlyDate {
         this.startDayOfWeek = startDayOfWeek;
     }
 
+    public int getMonth() {
+        return month;
+    }
+
+    public int getStartDayOfMonth() {
+        return startDayOfMonth;
+    }
+
+    public String getStartDayOfWeek() {
+        return startDayOfWeek;
+    }
+
     public int getLastDayOfMonth() {
         return lastDayOfMonth;
     }

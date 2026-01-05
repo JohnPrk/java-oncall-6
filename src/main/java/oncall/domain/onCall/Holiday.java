@@ -1,5 +1,7 @@
 package oncall.domain.onCall;
 
+import java.util.Arrays;
+
 public enum Holiday {
 
     NEW_YEAR_S_DAY(1, 1),
@@ -17,5 +19,10 @@ public enum Holiday {
     Holiday(int month, int day) {
         this.month = month;
         this.day = day;
+    }
+
+    public static boolean isHoliday(int month, int day) {
+        return Arrays.stream(values())
+                .anyMatch(holiday -> holiday.month == month && holiday.day == day);
     }
 }

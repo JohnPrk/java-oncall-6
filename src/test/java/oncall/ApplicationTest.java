@@ -1,10 +1,10 @@
 package oncall;
 
-import static camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import camp.nextstep.edu.missionutils.test.NsTest;
 import org.junit.jupiter.api.Test;
+
+import static camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ApplicationTest extends NsTest {
 
@@ -68,6 +68,49 @@ class ApplicationTest extends NsTest {
                     "4월 28일 금 조이" + LINE_SEPARATOR,
                     "4월 29일 토 해시" + LINE_SEPARATOR,
                     "4월 30일 일 폴로"
+            );
+        });
+    }
+
+    @Test
+    void 충돌이_발생하는_경우에도_다음_근무자와_교대하며_진행한다() {
+        assertSimpleTest(() -> {
+            run(
+                    "6,월",
+                    "허브,쥬니,말랑,라온,헤나,우코,에단,수달,파워,히이로,마코,슬링키,모디,연어,깃짱,리오,고니,박스터,달리,조이,노아이즈,도이,도치,홍고,스캇,폴로,해시,로지,첵스,아이크,우가,푸만능,애쉬,로이스,오션",
+                    "헤나,우코,에단,수달,파워,히이로,마코,슬링키,모디,연어,깃짱,리오,고니,박스터,달리,조이,노아이즈,도이,도치,홍고,스캇,폴로,해시,로지,첵스,아이크,우가,푸만능,애쉬,로이스,오션,허브,쥬니,말랑,라온"
+            );
+            assertThat(output()).contains(
+                    "6월 1일 월 허브" + LINE_SEPARATOR,
+                    "6월 2일 화 쥬니" + LINE_SEPARATOR,
+                    "6월 3일 수 말랑" + LINE_SEPARATOR,
+                    "6월 4일 목 라온" + LINE_SEPARATOR,
+                    "6월 5일 금 헤나" + LINE_SEPARATOR,
+                    "6월 6일 토 우코" + LINE_SEPARATOR,
+                    "6월 7일 일 헤나" + LINE_SEPARATOR,
+                    "6월 8일 월 우코" + LINE_SEPARATOR,
+                    "6월 9일 화 에단" + LINE_SEPARATOR,
+                    "6월 10일 수 수달" + LINE_SEPARATOR,
+                    "6월 11일 목 파워" + LINE_SEPARATOR,
+                    "6월 12일 금 히이로" + LINE_SEPARATOR,
+                    "6월 13일 토 에단" + LINE_SEPARATOR,
+                    "6월 14일 일 수달" + LINE_SEPARATOR,
+                    "6월 15일 월 마코" + LINE_SEPARATOR,
+                    "6월 16일 화 슬링키" + LINE_SEPARATOR,
+                    "6월 17일 수 모디" + LINE_SEPARATOR,
+                    "6월 18일 목 연어" + LINE_SEPARATOR,
+                    "6월 19일 금 깃짱" + LINE_SEPARATOR,
+                    "6월 20일 토 파워" + LINE_SEPARATOR,
+                    "6월 21일 일 히이로" + LINE_SEPARATOR,
+                    "6월 22일 월 리오" + LINE_SEPARATOR,
+                    "6월 23일 화 고니" + LINE_SEPARATOR,
+                    "6월 24일 수 박스터" + LINE_SEPARATOR,
+                    "6월 25일 목 달리" + LINE_SEPARATOR,
+                    "6월 26일 금 조이" + LINE_SEPARATOR,
+                    "6월 27일 토 마코" + LINE_SEPARATOR,
+                    "6월 28일 일 슬링키" + LINE_SEPARATOR,
+                    "6월 29일 월 노아이즈" + LINE_SEPARATOR,
+                    "6월 30일 화 도이"
             );
         });
     }

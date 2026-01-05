@@ -19,6 +19,16 @@ public class Crews {
         validNotUpperThirtyFive();
     }
 
+    public Crew peek() {
+        return crewList.peek();
+    }
+
+    public Crew pop() {
+        Crew crew = crewList.pop();
+        crewList.addLast(crew);
+        return crew;
+    }
+
     private void addCrew(Crew crew) {
         if (crewList.contains(crew)) {
             throw new IllegalArgumentException(ALREADY_CREW_EXISTS);
@@ -40,5 +50,13 @@ public class Crews {
 
     public ArrayDeque<Crew> getCrewList() {
         return crewList;
+    }
+
+    public void addFirst(Crew crew) {
+        crewList.addFirst(crew);
+    }
+
+    public Crew remove() {
+        return crewList.remove();
     }
 }
